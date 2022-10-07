@@ -9,24 +9,24 @@ namespace MethodHuffman
     class Program
     {
         /// <summary>
-        /// Структура "узел H-дерева"
+        /// Структура "узел дерева"
         /// </summary>
         public struct huffmannTreeNode
         {
             /// <summary>
             /// Текст
             /// </summary>
-            public String text;
+            public string text;
             /// <summary>
             /// Двоичный код
             /// </summary>
-            public String code;
+            public string code;
             /// <summary>
             /// Частота встречаемости
             /// </summary>
-            public int frequency;
+            public float frequency;
 
-            public huffmannTreeNode(String t, String c, int f)
+            public huffmannTreeNode(string t, string c, float f)
             {
                 text = t;
                 code = c;
@@ -37,15 +37,18 @@ namespace MethodHuffman
         /// <summary>
         /// Частота встречаемости отдельных символов алфавита
         /// </summary>
-        static Dictionary<char, int> freqs = new Dictionary<char, int>();
+        static Dictionary<char, float> freqs = new Dictionary<char, float>();
+
         /// <summary>
         /// Исходное дерево
         /// </summary>
         static List<huffmannTreeNode> source = new List<huffmannTreeNode>();
+
         /// <summary>
         /// Вспомогательное дерево
         /// </summary>
         static List<huffmannTreeNode> newRes = new List<huffmannTreeNode>();
+
         /// <summary>
         /// Еще какое-то дерево
         /// </summary>
@@ -53,23 +56,24 @@ namespace MethodHuffman
 
         static void Main(string[] args)
         {
-            string text = Console.ReadLine();
-
-            //Считаем частоту
-            for (int index = 0; index < text.Length; index++)
+            string text = "";
+            bool flag = true;
+            while (flag)
             {
-                if (freqs.Keys.Contains(text[index]))
-                {
-                    freqs[text[index]]++;
-                }
-                else
-                {
-                    freqs.Add(text[index], 1);
-                }
+                Console.Write("Введите символ: ");
+                char inputChar = char.Parse(Console.ReadLine());
+                text += inputChar;
+                Console.Write("Введите частоту сивола: ");
+                float inputFreq = float.Parse(Console.ReadLine());
+                freqs.Add(inputChar, inputFreq);
+                Console.Write("Продолжить(1/0)? ");
+                byte key = byte.Parse(Console.ReadLine());
+                if (key == 1) continue;
+                else break;
             }
 
             //Начальное заполнение деревьев
-            foreach (KeyValuePair<char, int> Pair in freqs)
+            foreach (KeyValuePair<char, float> Pair in freqs)
             {
                 source.Add(new huffmannTreeNode(Pair.Key.ToString(), "", Pair.Value));
                 tree.Add(new huffmannTreeNode(Pair.Key.ToString(), "", Pair.Value));
@@ -94,11 +98,11 @@ namespace MethodHuffman
                 {
                     if (tree[tree.Count - 2].text.Contains(source[index].text))
                     {
-                        newRes[index] = new huffmannTreeNode(newRes[index].text, "0" + newRes[index].code, newRes[index].frequency);
+                        newRes[index] = new huffmannTreeNode(newRes[index].text, "1" + newRes[index].code, newRes[index].frequency);
                     }
                     else if (tree[tree.Count - 1].text.Contains(source[index].text))
                     {
-                        newRes[index] = new huffmannTreeNode(newRes[index].text, "1" + newRes[index].code, newRes[index].frequency);
+                        newRes[index] = new huffmannTreeNode(newRes[index].text, "0" + newRes[index].code, newRes[index].frequency);
                     }
                 }
 
@@ -108,23 +112,13 @@ namespace MethodHuffman
             }
 
             //Выводим алфавит на экран
+            Console.WriteLine("\n|Символ|Частота|Код|");
             for (int index = 0; index < source.Count; index++)
             {
-                Console.WriteLine(newRes[index].text + " (" + newRes[index].code + ")");
+                Console.WriteLine("|  "+ newRes[index].text +"   |" + newRes[index].frequency + "|" + newRes[index].code + "|");
             }
-            string text2 = "";
-            //Битовая последовательность с новыми кодами
-            for (int index = 0; index < text.Length; index++)
-            {
-                foreach (huffmannTreeNode htn in newRes)
-                {
-                    if (htn.text == text[index].ToString())
-                    {
-                        text2 += htn.code;
-                    }
-                }
-            }
-            Console.WriteLine(text2);
+
+            Console.WriteLine("Нажмите Enter, чтобы выйти");
             Console.ReadLine();
         }
 
