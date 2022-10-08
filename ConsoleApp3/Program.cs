@@ -112,11 +112,18 @@ namespace MethodHuffman
             }
 
             //Выводим алфавит на экран
+            var sortNewRes = from r in newRes
+                             orderby r.frequency descending
+                             select r;
             Console.WriteLine("\n|Символ|Частота|Код|");
-            for (int index = 0; index < source.Count; index++)
+            foreach (var r in sortNewRes)
             {
-                Console.WriteLine("|  "+ newRes[index].text +"   |" + newRes[index].frequency + "|" + newRes[index].code + "|");
+                Console.WriteLine($"|  " + r.text + "   |" + r.frequency + "|" + r.code + "|");
             }
+            //for (int index = 0; index < source.Count; index++)
+            //{
+            //    Console.WriteLine("|  "+ sortNewRes[index].text +"   |" + sortNewRes[index].frequency + "|" + newRes[index].code + "|");
+            //}
 
             Console.WriteLine("Нажмите Enter, чтобы выйти");
             Console.ReadLine();
